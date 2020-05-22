@@ -1,0 +1,10 @@
+<div class="pure-form">
+  <fieldset>
+    <input
+      type="text"
+      [formControl]="queryControl"
+    >
+  </fieldset>
+</div>
+
+<app-movie-list [movies]="movies$ | async"></app-movie-list>

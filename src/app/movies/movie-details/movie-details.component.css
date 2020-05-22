@@ -1,0 +1,49 @@
+.back-button {
+  padding: 10px;
+}
+.movie-details-content {
+  display: flex;
+}
+
+.poster {
+  width: 320px;
+  padding: 10px;
+  flex: none;
+}
+
+.side-info {
+  max-width: 500px;
+  padding: 10px;
+}
+
+.date {
+  font-size: 0.6em;
+  color: #999;
+  padding: 5px;
+}
+
+.genres span {
+  font-size: 0.8em;
+  color: #444;
+  padding: 5px;
+}
+.overview {
+  margin-top: 30px;
+}
+
+.cast-actor {
+  font-size: 0.9em;
+}
+.gold {
+  color: gold;
+  font-size: 1.2em;
+}
+
+.loading-wrapper {
+  width: 100vw;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  align-items: center;
+}

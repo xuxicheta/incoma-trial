@@ -1,0 +1,35 @@
+<div class="movie-details-content" *ngIf="!error && !loading">
+
+  <div class="poster">
+      <img src="{{posterSrc}}">
+  </div>
+  <div class="side-info">
+    <h2 class="title">
+      {{ movie?.title}}
+      <span class="date">{{movie?.release_date}}</span>
+      
+    </h2>
+    <div class="genres">
+      <span *ngFor="let genre of movie?.genres">{{genre.name}}</span>
+    </div>
+    <div class="overview">
+      {{ movie?.overview}}
+    </div>
+
+    <div class="cast-list">
+      <h6 class="subheading-1">Cast:</h6>
+
+      <div class="cast" *ngFor="let actor of cast">
+        <div class="cast-actor body-1">{{actor.name}}</div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<div class="movie-details-content" *ngIf="error">
+  Movie not found
+</div>
+
+<div class="loading-wrapper" *ngIf="loading">
+</div>

@@ -1,0 +1,8 @@
+:host {
+  padding: 10px;
+  display: block;
+}
+
+button:not(:first-child) {
+  margin-left: 10px;
+}

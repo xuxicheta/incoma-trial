@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/purecss/build/pure-min.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -123,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "incoma-trial"
+    }
+  },
+  "defaultProject": "incoma-trial",
+  "cli": {
+    "analytics": false
+  }
 }
