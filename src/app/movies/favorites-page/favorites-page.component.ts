@@ -7,7 +7,7 @@ import { FavoritesState } from '../state/favorites.state';
   templateUrl: './favorites-page.component.html',
   styleUrls: ['./favorites-page.component.css']
 })
-export class FavoritesComponent {
+export class FavoritesPageComponent {
   public favorites$ = this.favoritesState.selectAll();
 
   constructor(

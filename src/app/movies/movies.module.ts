@@ -1,27 +1,27 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header/header.component';
-import { MovieDetailsComponent } from './movie-details/movie-details.component';
-import { MovieListPageComponent } from './movie-list-page/movie-list-page.component';
-import { FavoritesComponent } from './favorites-page/favorites-page.component';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MovieListComponent } from './movie-list/movie-list.component';
-import { MovieListElementComponent } from './movie-list-element/movie-list-element.component';
+import { RouterModule } from '@angular/router';
 import { FavoriteStarModule } from '../utility/favorite-star/favorite-star.module';
+import { FavoritesPageComponent } from './favorites-page/favorites-page.component';
+import { HeaderComponent } from './header/header.component';
+import { MovieDetailsPageComponent } from './movie-details-page/movie-details-page.component';
 import { InFavoritesPipe } from './movie-list-element/in-favorites.pipe';
+import { MovieListElementComponent } from './movie-list-element/movie-list-element.component';
+import { MovieListPageComponent } from './movie-list-page/movie-list-page.component';
+import { MovieListComponent } from './movie-list/movie-list.component';
 
 
 
 @NgModule({
   declarations: [
+    FavoritesPageComponent,
     HeaderComponent,
-    MovieDetailsComponent,
-    MovieListPageComponent,
-    FavoritesComponent,
+    InFavoritesPipe,
+    MovieDetailsPageComponent,
     MovieListComponent,
     MovieListElementComponent,
-    InFavoritesPipe
+    MovieListPageComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +29,6 @@ import { InFavoritesPipe } from './movie-list-element/in-favorites.pipe';
     ReactiveFormsModule,
     FavoriteStarModule,
   ],
-  exports: [HeaderComponent, MovieDetailsComponent, MovieListPageComponent, FavoritesComponent]
+  exports: [HeaderComponent, MovieDetailsPageComponent, MovieListPageComponent, FavoritesPageComponent]
 })
 export class MoviesModule { }
