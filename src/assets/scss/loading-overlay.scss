@@ -1,0 +1,9 @@
+label .loading-overlay {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  bottom: 0;
+  min-width: 30px;
+  display: flex;
+  justify-content: center;
+}
