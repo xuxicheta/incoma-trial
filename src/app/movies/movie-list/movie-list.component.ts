@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Movie } from '../Movie';
 
 @Component({
@@ -12,6 +12,9 @@ export class MovieListComponent implements OnInit, OnChanges {
   @Input() movies: Movie[];
   @Input() loading: boolean;
   @Input() error: Error;
+  @Input() total: number;
+
+  @Output() loadMore = new EventEmitter();
 
   constructor() { }
 
@@ -29,4 +32,7 @@ export class MovieListComponent implements OnInit, OnChanges {
     }
   }
 
+  public trackBy(index: number, item: Movie): number {
+    return item.id;
+  }
 }

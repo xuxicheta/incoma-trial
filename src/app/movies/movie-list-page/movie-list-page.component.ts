@@ -12,10 +12,11 @@ import { MovieListPageService } from './movie-list-page.service';
 })
 export class MovieListPageComponent implements OnInit, OnDestroy {
   private sub = new Subscription();
-  public queryControl = new FormControl();
+  public queryControl = new FormControl('all');
   public movies$ = this.moviesState.selectAll();
   public loading$ = this.moviesState.selectLoading();
   public error$ = this.moviesState.selectError();
+  public total$ = this.moviesState.select(s => s.total);
 
 
   constructor(
@@ -27,7 +28,7 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
     this.sub.add(this.querySubscription());
 
     of('all').pipe(
-      this.movieListPageService.onQueryOperator(),
+      this.movieListPageService.onQuerySetOperator(),
     ).subscribe();
   }
 
@@ -35,9 +36,20 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  public onLoadMore(): void {
+    this.sub.add(this.loadMore());
+  }
+
   private querySubscription(): Subscription {
     return this.queryControl.valueChanges.pipe(
-      this.movieListPageService.onQueryOperator(),
+      this.movieListPageService.onQuerySetOperator(),
+    )
+      .subscribe();
+  }
+
+  private loadMore(): Subscription {
+    return of(this.queryControl.value).pipe(
+      this.movieListPageService.onQueryUpdateOperator()
     )
       .subscribe();
   }

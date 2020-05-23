@@ -13,4 +13,6 @@
   [movies]="movies$ | async"
   [error]="error$ | async"
   [loading]="loading$ | async"
+  [total]="total$ | async"
+  (loadMore)="onLoadMore()"
 ></app-movie-list>

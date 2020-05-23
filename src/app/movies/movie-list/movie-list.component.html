@@ -1,9 +1,18 @@
-<ng-container *ngIf="!loading && movies.length; else empty">
+<ng-container *ngIf="movies.length; else empty">
   <app-movie-list-element
-    *ngFor="let movie of movies"
+    *ngFor="let movie of movies; trackBy: trackBy"
     [movie]="movie"
   >
   </app-movie-list-element>
+
+  <button
+    *ngIf="!(movies.length >= total)"
+    class="pure-button pure-button-primary"
+    [disabled]="loading"
+    (click)="loadMore.emit()"
+  >
+    Load More
+  </button>
 </ng-container>
 
 <ng-template #empty>

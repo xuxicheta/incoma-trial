@@ -4,7 +4,7 @@ import { Movie } from '../Movie';
 import { debounceTime, switchMap, filter, pluck } from 'rxjs/operators';
 import { MovieApiService } from '../movie-api.service';
 import { MoviesState } from '../state/movies.state';
-import { handleSetApi } from 'src/app/store/store-api-handlers';
+import { handleSetApi, handleUpsertApi } from 'src/app/store/store-api-handlers';
 
 @Injectable()
 export class MovieListPageService {
@@ -14,15 +14,29 @@ export class MovieListPageService {
     private moviesState: MoviesState,
   ) { }
 
-  onQueryOperator(): OperatorFunction<string, Movie[]> {
+  onQuerySetOperator(): OperatorFunction<string, Movie[]> {
     return input$ => input$.pipe(
       debounceTime(500),
       filter((value) => !!value),
       switchMap((query: string) => this.movieApiService.search(query).pipe(
-        this.moviesState.updateTotal(),
+        this.moviesState.updatePaging(),
         pluck('results'),
         handleSetApi(this.moviesState),
       )),
-    )
+    );
+  }
+
+  onQueryUpdateOperator(): OperatorFunction<string, Movie[]> {
+    return input$ => input$.pipe(
+      switchMap((query: string) => {
+        const page = this.moviesState.getValue().page;
+
+        return this.movieApiService.search(query, `${page + 1}`).pipe(
+          this.moviesState.updatePaging(),
+          pluck('results'),
+          handleUpsertApi(this.moviesState),
+        );
+      }),
+    );
   }
 }

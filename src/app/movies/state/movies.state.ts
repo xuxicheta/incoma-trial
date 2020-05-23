@@ -7,10 +7,12 @@ import { Movie } from '../Movie';
 
 export interface MoviesStateContent extends EntityState<Movie> {
   total: number;
+  page: number;
 }
 
 const initialState = (): Partial<MoviesStateContent> => ({
   total: 0,
+  page: 0,
 });
 
 @Injectable({
@@ -27,7 +29,12 @@ export class MoviesState extends EntityStore<Movie, MoviesStateContent> {
     );
   }
 
-  public updateTotal(): MonoTypeOperatorFunction<ApiResponse<Movie>> {
-    return tap((response: ApiResponse<Movie>) => this.update({ total: response.total_results }));
+  public updatePaging(): MonoTypeOperatorFunction<ApiResponse<Movie>> {
+    return tap((response: ApiResponse<Movie>) => {
+      this.update({
+        total: response.total_results,
+        page: response.page,
+      });
+    });
   }
 }
