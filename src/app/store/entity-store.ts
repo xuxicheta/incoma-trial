@@ -11,6 +11,7 @@ export interface EntityStoreOptions {
 export interface EntityState<T> {
   entities: Record<ID, T>;
   activeId: ID;
+  length: number;
 }
 
 const mapper = <T>(entities: T[], key: ID) => entities.reduce<Record<ID, T>>((acc, el) => {
@@ -18,9 +19,9 @@ const mapper = <T>(entities: T[], key: ID) => entities.reduce<Record<ID, T>>((ac
   return acc;
 }, {});
 
-const flatter = <T>(mapped: Record<ID, T>) => Object.values(mapped);
-
 export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
+  protected ids: ID[] = [];
+
   constructor(
     initialData: Partial<S>,
     private options: EntityStoreOptions,
@@ -31,18 +32,24 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
     } as unknown as S);
   }
 
-  public setEntities(entities: T[]): void {
+  private updateEntries(entries: Record<ID, T>) {
     this.set({
       ...this.value,
-      entities: mapper(entities, this.options.idKey),
+      entities: entries,
+      length: Object.keys(entries).length,
     });
+  }
+
+  public setEntities(entities: T[]): void {
+    this.ids = entities.map(entity => entity[this.options.idKey]);
+    this.updateEntries(mapper(entities, this.options.idKey));
   }
 
   public selectAll(): Observable<T[]> {
     return this.select().pipe(
       pluck('entities'),
       distinctUntilChanged(),
-      map(entities => this.getAll())
+      map(() => this.getAll())
     );
   }
 
@@ -55,7 +62,7 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
   }
 
   public getAll(): T[] {
-    return this.sort(flatter(this.value.entities));
+    return this.ids.map(id => this.value.entities[id]);
   }
 
   public getEntity(id: ID): T {
@@ -64,8 +71,9 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
 
   public setActiveId(activeId: ID): boolean {
     if (activeId in this.value.entities) {
-      this.value.activeId = activeId;
-      this.update(this.value);
+      const value = { ...this.value };
+      value.activeId = activeId;
+      this.set(value);
       return true;
     }
     return false;
@@ -87,45 +95,49 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
   }
 
   public selectActive(): Observable<T> {
-    return this.selectActiveId().pipe(
-      map(activeId => this.getEntity(activeId)),
-      distinctUntilChanged(),
+    return this.select().pipe(
+      map(value => value.entities[value.activeId])
     );
   }
 
   public upsertEntity(id: ID, entity: Partial<T>): void {
-    const newEntity = {
+    if (this.ids.indexOf(id) === -1) {
+      this.ids.push(id);
+    }
+
+    this.updateEntries({
+      ...this.value.entities,
+      [id]: {
       ...this.getEntity(id),
       ...entity,
-    };
-
-    const entities = {
-      ...this.value.entities,
-      [id]: newEntity,
-    };
-
-    this.set({
-      ...this.value,
-      entities,
+      },
     });
   }
 
   public upsertMany(entities: T[]) {
-    const stored = { ...this.value.entities };
-    entities.forEach(entity => stored[entity[this.options.idKey]] = entity);
-    this.data.next({
-      ...this.value,
-      entities: stored,
+    entities.forEach(entity => {
+      const id = entity[this.options.idKey];
+
+      if (this.ids.indexOf(id) === -1) {
+        this.ids.push(id);
+      }
+    });
+
+    this.updateEntries({
+      ...this.value.entities,
+      ...mapper(entities, this.options.idKey),
     });
   }
 
   public removeEntity(id: ID) {
+    const idIndex = this.ids.indexOf(id);
+
+    if (idIndex === -1) {
+      return;
+    }
+
+    this.ids.splice(idIndex, 1);
     delete this.value.entities[id];
     this.set(this.value);
-  }
-
-  private sort(entities: T[]): T[] {
-    const { idKey } = this.options;
-    return entities.sort((a, b) => +a[idKey] - +b[idKey]);
   }
 }

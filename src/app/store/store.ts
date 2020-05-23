@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map, distinctUntilChanged } from 'rxjs/operators';
 
 export class Store<T> {
   protected data: BehaviorSubject<T>;
@@ -18,21 +18,24 @@ export class Store<T> {
     return this.value;
   }
 
-  public select(): Observable<T> {
-    return this.data.asObservable();
+  public select(): Observable<T>;
+  public select<K extends keyof T>(project: (v: T) => T[K]): Observable<T[K]>;
+  public select<K extends keyof T>(project: (v: T) => T[K]|T = v => v): Observable<T[K]|T> {
+    return this.data.pipe(
+      map(project),
+      distinctUntilChanged(),
+    );
   }
 
   public update(value: Partial<T>): void {
-    this.value = {
+    this.updateValue({
       ...this.value,
-      value,
-    };
-    this.data.next(this.value);
+      ...value,
+    });
   }
 
   public set(value: T): void {
-    this.value = value;
-    this.data.next(this.value);
+    this.updateValue(value);
     this.loading.next(false);
   }
 
@@ -67,5 +70,11 @@ export class Store<T> {
   public destroy() {
     this.data.complete();
     this.loading.complete();
+    this.value = null;
+  }
+
+  protected updateValue(value: T) {
+    this.value = value;
+    this.data.next(value);
   }
 }
