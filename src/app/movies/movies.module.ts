@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FavoriteStarModule } from '../utility/favorite-star/favorite-star.module';
+import { SpinnerModule } from '../utility/spinner/spinner.module';
 import { FavoritesPageComponent } from './favorites-page/favorites-page.component';
 import { HeaderComponent } from './header/header.component';
 import { MovieDetailsPageComponent } from './movie-details-page/movie-details-page.component';
@@ -28,6 +29,7 @@ import { MovieListComponent } from './movie-list/movie-list.component';
     RouterModule,
     ReactiveFormsModule,
     FavoriteStarModule,
+    SpinnerModule,
   ],
   exports: [HeaderComponent, MovieDetailsPageComponent, MovieListPageComponent, FavoritesPageComponent]
 })

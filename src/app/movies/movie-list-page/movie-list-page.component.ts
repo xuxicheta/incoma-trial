@@ -14,7 +14,7 @@ import { FavoriteElementChange } from '../movie-list/favorite-element-change.typ
 })
 export class MovieListPageComponent implements OnInit, OnDestroy {
   private sub = new Subscription();
-  public queryControl = new FormControl('all');
+  public queryControl = new FormControl('');
   public movies$ = this.moviesState.selectAll();
   public loading$ = this.moviesState.selectLoading();
   public error$ = this.moviesState.selectError();
@@ -28,14 +28,11 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub.add(this.querySubscription());
-
-    of('all').pipe(
-      this.movieListPageService.onQuerySetOperator(),
-    ).subscribe();
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.moviesState.reset();
   }
 
   public onLoadMore(): void {

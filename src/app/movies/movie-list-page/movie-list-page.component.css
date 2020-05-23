@@ -2,6 +2,10 @@
   display: block;
 }
 
+.label {
+  display: inline-block;
+}
+
 .query-input {
   min-width: 300px;
 }

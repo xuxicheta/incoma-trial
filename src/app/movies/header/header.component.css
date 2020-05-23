@@ -1,8 +1,12 @@
 :host {
-  padding: 10px;
+  padding: 10px 0;
   display: block;
 }
 
 button:not(:first-child) {
   margin-left: 10px;
+}
+
+.active {
+  outline: 1px solid black
 }

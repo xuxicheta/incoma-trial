@@ -1,11 +1,17 @@
 <div class="pure-form">
   <fieldset>
-    <input
-      type="text"
-      class="query-input"
-      [formControl]="queryControl"
-      placeholder="Search movie..."
+    <label
+      class="label"
+      [spinner]="loading$ | async"
     >
+      <input
+        type="text"
+        class="query-input"
+        [formControl]="queryControl"
+        placeholder="Search movie..."
+      >
+    </label>
+
   </fieldset>
 </div>
 
