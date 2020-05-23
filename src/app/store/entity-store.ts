@@ -10,6 +10,7 @@ export interface EntityStoreOptions {
 
 export interface EntityState<T> {
   entities: Record<ID, T>;
+  ids: ID[];
   activeId: ID;
   length: number;
 }
@@ -20,29 +21,29 @@ const mapper = <T>(entities: T[], key: ID) => entities.reduce<Record<ID, T>>((ac
 }, {});
 
 export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
-  protected ids: ID[] = [];
-
   constructor(
     initialData: Partial<S>,
     private options: EntityStoreOptions,
   ) {
     super({
       ...initialData,
+      ids: [],
       entities: [],
     } as unknown as S);
   }
 
-  private updateEntries(entries: Record<ID, T>) {
+  private updateEntries(entries: Record<ID, T>, ids: ID[]) {
     this.set({
       ...this.value,
+      ids,
       entities: entries,
       length: Object.keys(entries).length,
     });
   }
 
   public setEntities(entities: T[]): void {
-    this.ids = entities.map(entity => entity[this.options.idKey]);
-    this.updateEntries(mapper(entities, this.options.idKey));
+    const ids = entities.map(entity => entity[this.options.idKey]);
+    this.updateEntries(mapper(entities, this.options.idKey), ids);
   }
 
   public selectAll(): Observable<T[]> {
@@ -62,7 +63,7 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
   }
 
   public getAll(): T[] {
-    return this.ids.map(id => this.value.entities[id]);
+    return this.value.ids.map(id => this.value.entities[id]);
   }
 
   public getEntity(id: ID): T {
@@ -101,8 +102,9 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
   }
 
   public upsertEntity(id: ID, entity: Partial<T>): void {
-    if (!this.ids.includes(id)) {
-      this.ids.push(id);
+    const ids = this.value.ids.slice();
+    if (!ids.includes(id)) {
+      ids.push(id);
     }
 
     this.updateEntries({
@@ -111,35 +113,38 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
       ...this.getEntity(id),
       ...entity,
       },
-    });
+    }, ids);
   }
 
   public upsertMany(entities: T[]) {
+    const ids = this.value.ids.slice();
+
     entities.forEach(entity => {
       const id = entity[this.options.idKey];
 
-      if (!this.ids.includes(id)) {
-        this.ids.push(id);
+      if (!ids.includes(id)) {
+        ids.push(id);
       }
     });
 
     this.updateEntries({
       ...this.value.entities,
       ...mapper(entities, this.options.idKey),
-    });
+    }, ids);
   }
 
   public removeEntity(id: ID) {
-    const idIndex = this.ids.indexOf(id);
+    const ids = this.value.ids.slice();
+    const idIndex = ids.indexOf(id);
 
     if (idIndex === -1) {
       return;
     }
 
-    this.ids.splice(idIndex, 1);
+    ids.splice(idIndex, 1);
 
     const entities = { ...this.value.entities };
     delete entities[id];
-    this.updateEntries(entities);
+    this.updateEntries(entities, ids);
   }
 }
