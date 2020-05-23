@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { MoviesState } from '../state/movies.state';
 import { MovieListPageService } from './movie-list-page.service';
 
@@ -26,9 +26,9 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub.add(this.querySubscription());
 
-    // of('all').pipe(
-    //   this.movieListPageService.onQueryOperator(),
-    // ).subscribe();
+    of('all').pipe(
+      this.movieListPageService.onQueryOperator(),
+    ).subscribe();
   }
 
   ngOnDestroy() {

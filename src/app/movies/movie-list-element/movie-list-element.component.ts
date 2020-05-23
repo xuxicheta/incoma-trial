@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Movie } from '../Movie';
 
 @Component({
@@ -9,6 +9,7 @@ import { Movie } from '../Movie';
 })
 export class MovieListElementComponent implements OnInit {
   @Input() movie: Movie;
+  @Output() activeChange = new EventEmitter<boolean>();
 
   constructor() { }
 

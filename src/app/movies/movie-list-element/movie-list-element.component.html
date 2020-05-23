@@ -1,11 +1,14 @@
-<header>
+<header class="element-header">
   <a
     [routerLink]="['/details/', movie.id]"
     class="element-title-link"
   >
     {{ movie.title }}
   </a>
-  <app-favorite-star [id]="movie.id"></app-favorite-star>
+  <app-favorite-star
+    [id]="movie.id"
+    (checkedChange)="activeChange.emit($event)"
+  ></app-favorite-star>
 </header>
 
 <article>{{ movie.overview }}</article>
