@@ -28,4 +28,12 @@ export class FavoritesState extends EntityStore<Movie, FavoritesStateContent> {
       map(() => this.ids),
     );
   }
+
+  changeFavorite(movie: Movie, isFavorite: boolean) {
+    if (isFavorite) {
+      this.upsertEntity(movie.id, movie);
+    } else {
+      this.removeEntity(movie.id);
+    }
+  }
 }

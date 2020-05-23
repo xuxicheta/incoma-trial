@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { of, Subscription } from 'rxjs';
-import { Movie } from '../Movie';
 import { FavoritesState } from '../state/favorites.state';
 import { MoviesState } from '../state/movies.state';
 import { MovieListPageService } from './movie-list-page.service';
+import { FavoriteElementChange } from '../movie-list/favorite-element-change.type';
 
 @Component({
   selector: 'app-movie-list-page',
@@ -19,8 +19,6 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
   public loading$ = this.moviesState.selectLoading();
   public error$ = this.moviesState.selectError();
   public total$ = this.moviesState.select(s => s.total);
-  public favoritesIds$ = this.favoritesState.selectIds();
-
 
   constructor(
     private movieListPageService: MovieListPageService,
@@ -58,11 +56,7 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  public onFavoriteElementChange(evt: { movie: Movie; isFavorite: boolean }) {
-    if (evt.isFavorite) {
-      this.favoritesState.upsertEntity(evt.movie.id, evt.movie);
-    } else {
-      this.favoritesState.removeEntity(evt.movie.id);
-    }
+  public onFavoriteElementChange({ movie, isFavorite }: FavoriteElementChange): void {
+    this.favoritesState.changeFavorite(movie, isFavorite);
   }
 }

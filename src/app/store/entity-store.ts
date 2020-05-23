@@ -101,7 +101,7 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
   }
 
   public upsertEntity(id: ID, entity: Partial<T>): void {
-    if (this.ids.indexOf(id) === -1) {
+    if (!this.ids.includes(id)) {
       this.ids.push(id);
     }
 
@@ -118,7 +118,7 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
     entities.forEach(entity => {
       const id = entity[this.options.idKey];
 
-      if (this.ids.indexOf(id) === -1) {
+      if (!this.ids.includes(id)) {
         this.ids.push(id);
       }
     });
@@ -137,7 +137,9 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
     }
 
     this.ids.splice(idIndex, 1);
-    delete this.value.entities[id];
-    this.set(this.value);
+
+    const entities = { ...this.value.entities };
+    delete entities[id];
+    this.updateEntries(entities);
   }
 }

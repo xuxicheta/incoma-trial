@@ -1,7 +1,6 @@
 <ng-container *ngIf="movies.length; else empty">
   <app-movie-list-element
     *ngFor="let movie of movies; trackBy: trackBy"
-    [favoritesIds]="favoritesIds"
     [movie]="movie"
     (favoriteChange)="onFavoriteChange(movie, $event)"
   >

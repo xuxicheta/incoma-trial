@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Movie } from '../Movie';
-import { ID } from 'src/app/store/entity-store';
+import { FavoriteElementChange } from './favorite-element-change.type';
 
 @Component({
   selector: 'app-movie-list',
@@ -8,21 +8,15 @@ import { ID } from 'src/app/store/entity-store';
   styleUrls: ['./movie-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieListComponent implements OnInit, OnChanges {
+export class MovieListComponent implements OnChanges {
   public firstTime = true;
   @Input() movies: Movie[] = [];
   @Input() loading: boolean;
   @Input() error: Error;
   @Input() total = 0;
-  @Input() favoritesIds: ID[];
 
   @Output() loadMore = new EventEmitter();
-  @Output() favoriteElementChange = new EventEmitter<{ movie: Movie, isFavorite: boolean }>();
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  @Output() favoriteElementChange = new EventEmitter<FavoriteElementChange>();
 
   ngOnChanges() {
     this.checkFirst();

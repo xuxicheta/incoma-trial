@@ -1,0 +1,4 @@
+<app-movie-list
+  [movies]="favorites$ | async"
+  (favoriteElementChange)="onFavoriteElementChange($event)"
+></app-movie-list>

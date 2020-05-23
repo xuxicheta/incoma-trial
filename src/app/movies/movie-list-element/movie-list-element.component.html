@@ -7,7 +7,7 @@
   </a>
   <app-favorite-star
     [id]="movie.id"
-    [checked]="checked"
+    [checked]="movie.id | inFavorites | async"
     (checkedChange)="favoriteChange.emit($event)"
   ></app-favorite-star>
 </header>

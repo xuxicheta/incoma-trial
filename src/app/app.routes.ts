@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MovieListPageComponent } from './movies/movie-list-page/movie-list-page.component';
-import { FavoritesComponent } from './movies/favorites/favorites.component';
+import { FavoritesComponent } from './movies/favorites-page/favorites-page.component';
 import { MovieDetailsComponent } from './movies/movie-details/movie-details.component';
 
 export const appRoutes: Routes = [
