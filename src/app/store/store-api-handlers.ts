@@ -41,13 +41,13 @@ export function handleError<K, S>(store: Store<S>): MonoTypeOperatorFunction<K> 
 export function setEntities<T, S extends EntityState<T>>(store: EntityStore<T, S>): MonoTypeOperatorFunction<T[]> {
   return tap(result => {
     store.setEntities(result);
-    store.setError(false);
+    store.setError(null);
   });
 }
 
 export function upsertEntities<T, S extends EntityState<T>>(store: EntityStore<T, S>): MonoTypeOperatorFunction<T[]> {
   return tap(result => {
     store.upsertMany(result);
-    store.setError(false);
+    store.setError(null);
   });
 }
