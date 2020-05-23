@@ -40,7 +40,7 @@ export class Store<T> {
   }
 
   public reset(): void {
-    this.data.next(this.initialData);
+    this.set(this.initialData);
   }
 
   public setLoading(loading: boolean): void {
