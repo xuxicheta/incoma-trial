@@ -2,9 +2,15 @@
   <fieldset>
     <input
       type="text"
+      class="query-input"
       [formControl]="queryControl"
+      placeholder="Search movie..."
     >
   </fieldset>
 </div>
 
-<app-movie-list [movies]="movies$ | async"></app-movie-list>
+<app-movie-list
+  [movies]="movies$ | async"
+  [error]="error$ | async"
+  [loading]="loading$ | async"
+></app-movie-list>

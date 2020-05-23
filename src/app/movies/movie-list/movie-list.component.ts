@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
 import { Movie } from '../Movie';
 
 @Component({
@@ -7,12 +7,26 @@ import { Movie } from '../Movie';
   styleUrls: ['./movie-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieListComponent implements OnInit {
+export class MovieListComponent implements OnInit, OnChanges {
+  public firstTime = true;
   @Input() movies: Movie[];
+  @Input() loading: boolean;
+  @Input() error: Error;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges() {
+    this.checkFirst();
+  }
+
+  // dont show 'not found' if first time
+  private checkFirst() {
+    if (this.firstTime) {
+      this.firstTime = !this.loading;
+    }
   }
 
 }

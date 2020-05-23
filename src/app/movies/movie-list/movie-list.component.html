@@ -1,5 +1,11 @@
-<app-movie-list-element
-  *ngFor="let movie of movies"
-  [movie]="movie"
->
-</app-movie-list-element>
+<ng-container *ngIf="!loading && movies.length; else empty">
+  <app-movie-list-element
+    *ngFor="let movie of movies"
+    [movie]="movie"
+  >
+  </app-movie-list-element>
+</ng-container>
+
+<ng-template #empty>
+  <div *ngIf="!firstTime && !loading">Movies not found. Try another search</div>
+</ng-template>

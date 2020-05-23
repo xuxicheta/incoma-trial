@@ -1,28 +1,34 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MovieApiService } from '../movie-api.service';
-import { tap, switchMap, debounceTime } from 'rxjs/operators';
 import { MoviesState } from '../state/movies.state';
+import { MovieListPageService } from './movie-list-page.service';
 
 @Component({
   selector: 'app-movie-list-page',
   templateUrl: './movie-list-page.component.html',
-  styleUrls: ['./movie-list-page.component.css']
+  styleUrls: ['./movie-list-page.component.css'],
+  providers: [MovieListPageService]
 })
 export class MovieListPageComponent implements OnInit, OnDestroy {
+  private sub = new Subscription();
   public queryControl = new FormControl();
   public movies$ = this.moviesState.selectAll();
-  private sub = new Subscription();
+  public loading$ = this.moviesState.selectLoading();
+  public error$ = this.moviesState.selectError();
 
 
   constructor(
-    private movieApiService: MovieApiService,
+    private movieListPageService: MovieListPageService,
     private moviesState: MoviesState,
   ) { }
 
   ngOnInit() {
     this.sub.add(this.querySubscription());
+
+    // of('all').pipe(
+    //   this.movieListPageService.onQueryOperator(),
+    // ).subscribe();
   }
 
   ngOnDestroy() {
@@ -31,9 +37,7 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
 
   private querySubscription(): Subscription {
     return this.queryControl.valueChanges.pipe(
-      debounceTime(300),
-      switchMap((query: string) => this.movieApiService.search(query)),
-      tap(response => this.moviesState.setResponse(response))
+      this.movieListPageService.onQueryOperator(),
     )
       .subscribe();
   }
