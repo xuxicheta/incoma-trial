@@ -19,7 +19,7 @@ export const favoriteStarAnimations = [
       useAnimation(starAnimation, {
         params: {
           timings: '400ms ease',
-          scale: 1.3
+          scale: 1.7
         }
       })
     )
