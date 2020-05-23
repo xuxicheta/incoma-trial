@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Movie } from '../Movie';
 import { FavoriteElementChange } from './favorite-element-change.type';
+import { movieListAnimations } from './movie-list.animations';
 
 @Component({
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
   styleUrls: ['./movie-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: movieListAnimations,
 })
 export class MovieListComponent implements OnChanges {
   public firstTime = true;

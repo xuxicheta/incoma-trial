@@ -1,22 +1,30 @@
-<ng-container *ngIf="movies.length; else empty">
-  <app-movie-list-element
-    *ngFor="let movie of movies; trackBy: trackBy"
-    [movie]="movie"
-    (favoriteChange)="onFavoriteChange(movie, $event)"
+<span [@.disabled]="!movies.length">
+  <span
+    @list
+    *ngIf="movies.length; else empty"
   >
-  </app-movie-list-element>
+    <app-movie-list-element
+      @items
+      *ngFor="let movie of movies; trackBy: trackBy"
+      [movie]="movie"
+      (favoriteChange)="onFavoriteChange(movie, $event)"
+    >
+    </app-movie-list-element>
 
-  <button
-    *ngIf="!(movies.length >= total)"
-    class="pure-button pure-button-primary"
-    [disabled]="loading"
-    (click)="loadMore.emit()"
-  >
-    Load More
-  </button>
-  <span *ngIf="total"> Quantity: {{movies.length}} / {{total}}</span>
-</ng-container>
+    <button
+      *ngIf="!(movies.length >= total)"
+      class="pure-button pure-button-primary"
+      [disabled]="loading"
+      (click)="loadMore.emit()"
+    >
+      Load More
+    </button>
+    <span *ngIf="total">Quantity: {{movies.length}} / {{total}}</span>
+  </span>
+</span>
 
 <ng-template #empty>
   <div *ngIf="!firstTime && !loading">Movies not found. Try another search</div>
+
+  <div *ngIf="error" style="color: red">Search error</div>
 </ng-template>
