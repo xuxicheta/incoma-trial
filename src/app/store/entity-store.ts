@@ -1,6 +1,6 @@
-import { Store } from './store';
-import { map, distinctUntilChanged, pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { Store } from './store';
 
 export type ID = string | number;
 
@@ -107,6 +107,15 @@ export class EntityStore<T, S extends EntityState<T>> extends Store<S> {
     this.set({
       ...this.value,
       entities,
+    });
+  }
+
+  public upsertMany(entities: T[]) {
+    const stored = { ...this.value.entities };
+    entities.forEach(entity => stored[entity[this.options.idKey]] = entity);
+    this.data.next({
+      ...this.value,
+      entities: stored,
     });
   }
 
