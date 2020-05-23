@@ -5,7 +5,7 @@ export class Store<T> {
   protected data: BehaviorSubject<T>;
   protected value: T;
   private loading = new BehaviorSubject(false);
-  private error = new BehaviorSubject<any>(null);
+  private error = new BehaviorSubject<Error>(null);
 
   constructor(
     private initialData: T,
@@ -55,7 +55,7 @@ export class Store<T> {
     return this.loading.getValue();
   }
 
-  public setError(error: any) {
+  public setError(error: Error) {
     this.error.next(error);
   }
 

@@ -34,7 +34,7 @@ export function handleError<K, S>(store: Store<S>): MonoTypeOperatorFunction<K> 
   return catchError(error => {
     store.reset();
     store.setError(error);
-    return of([] as any);
+    return of([] as unknown as K);
   });
 }
 
