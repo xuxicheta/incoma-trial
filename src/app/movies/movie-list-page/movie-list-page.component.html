@@ -14,5 +14,7 @@
   [error]="error$ | async"
   [loading]="loading$ | async"
   [total]="total$ | async"
+  [favoritesIds]="favoritesIds$ | async"
   (loadMore)="onLoadMore()"
+  (favoriteElementChange)="onFavoriteElementChange($event)"
 ></app-movie-list>

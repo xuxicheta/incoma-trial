@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription, of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
+import { Movie } from '../Movie';
+import { FavoritesState } from '../state/favorites.state';
 import { MoviesState } from '../state/movies.state';
 import { MovieListPageService } from './movie-list-page.service';
 
@@ -17,11 +19,13 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
   public loading$ = this.moviesState.selectLoading();
   public error$ = this.moviesState.selectError();
   public total$ = this.moviesState.select(s => s.total);
+  public favoritesIds$ = this.favoritesState.selectIds();
 
 
   constructor(
     private movieListPageService: MovieListPageService,
     private moviesState: MoviesState,
+    private favoritesState: FavoritesState,
   ) { }
 
   ngOnInit() {
@@ -52,5 +56,13 @@ export class MovieListPageComponent implements OnInit, OnDestroy {
       this.movieListPageService.onQueryUpdateOperator()
     )
       .subscribe();
+  }
+
+  public onFavoriteElementChange(evt: { movie: Movie; isFavorite: boolean }) {
+    if (evt.isFavorite) {
+      this.favoritesState.upsertEntity(evt.movie.id, evt.movie);
+    } else {
+      this.favoritesState.removeEntity(evt.movie.id);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Movie } from '../Movie';
+import { ID } from 'src/app/store/entity-store';
 
 @Component({
   selector: 'app-movie-list-element',
@@ -8,8 +9,14 @@ import { Movie } from '../Movie';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieListElementComponent implements OnInit {
+  public checked: boolean;
   @Input() movie: Movie;
-  @Output() activeChange = new EventEmitter<boolean>();
+
+  @Input() set favoritesIds(favoritesIds: ID[]) {
+    this.checked = favoritesIds.indexOf(this.movie.id) !== -1;
+  }
+
+  @Output() favoriteChange = new EventEmitter<boolean>();
 
   constructor() { }
 
