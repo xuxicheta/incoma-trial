@@ -4,14 +4,14 @@ import { tap } from 'rxjs/operators';
 export class Store<T> {
   protected data: BehaviorSubject<T>;
   protected value: T;
-  private loading: BehaviorSubject<boolean>;
+  private loading = new BehaviorSubject(false);
+  private error = new BehaviorSubject<any>(null);
 
   constructor(
     private initialData: T,
   ) {
     this.value = initialData;
     this.data = new BehaviorSubject(initialData);
-    this.loading = new BehaviorSubject(false);
   }
 
   public getValue(): T {
@@ -52,12 +52,16 @@ export class Store<T> {
     return this.loading.getValue();
   }
 
-  public fetch(fetchingFunction: () => Observable<T>): Observable<T> {
-    this.setLoading(true);
-    return fetchingFunction().pipe(
-      tap((result: T) => this.set(result)),
-      tap(() => this.setLoading(false)),
-    );
+  public setError(error: any) {
+    this.error.next(error);
+  }
+
+  public selectError() {
+    return this.error.asObservable();
+  }
+
+  public getError() {
+    return this.error.getValue();
   }
 
   public destroy() {
